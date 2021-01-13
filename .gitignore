@@ -141,3 +141,5 @@ cython_debug/
 news_data/
 *.DS_Store
 .vscode/
+
+tmp_*
