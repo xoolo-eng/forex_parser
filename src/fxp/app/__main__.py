@@ -40,9 +40,18 @@ def create_parser():
         required=False,
         help="Load the application as a daemon.",
     )
-    parser.add_argument("-k", "--kill", action="store_true", help="Stop the application.")
     parser.add_argument(
-        "-p", "--pid", dest="pid_file", help="Name of pid file.", default="/tmp/fxp.pid"
+        "-k",
+        "--kill",
+        action="store_true",
+        help="Stop the application.",
+    )
+    parser.add_argument(
+        "-p",
+        "--pid",
+        dest="pid_file",
+        help="Name of pid file.",
+        default="/tmp/fxp.pid",
     )
     return parser
 
@@ -53,6 +62,8 @@ print(args)
 
 
 WORK = True
+
+
 def stop_handler(signum, frame):
     global WORK
     WORK = False
@@ -95,16 +106,15 @@ if args.daemon:
             pid_file.write(str(os.getpid()))
         signal.signal(signal.SIGTERM, stop_handler)
         start()
-        
+
     else:
         print(pid)
+elif args.kill:
+    stop()
+    os.unlink(args.pid_file)
+    exit(0)
 else:
     try:
         start()
     except KeyboardInterrupt:
         WORK = False
-
-if args.kill:
-    stop()
-    os.unlink(args.pid_file)
-    exit(0)
